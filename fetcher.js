@@ -7,7 +7,7 @@
 - */
 
 const request = require('request');
-const fs = require('node:fs');
+const fs = require('fs');
 
 // Parse command line arguments using process.argv
 const url = process.argv[2];
@@ -20,9 +20,12 @@ request(url, (error, response, body) => {
   } else if (response.statusCode !== 200) {
     console.error('Unexpected status: ', response.statusCode);
   } else {
-    // Success
+    fs.writeFile(filePath, body, (writeError) => {
+      if (writeError) {
+        console.error('Error writing to file: ', writeError);
+      } else {
+        console.log(`Downloaded and saved ${body.length} bytes to ${filePath}`);
+      }
+    });
   }
 });
-
-
-
